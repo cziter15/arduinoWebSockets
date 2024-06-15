@@ -835,7 +835,6 @@ void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine
 
             String handshake = WEBSOCKETS_STRING(
                 "HTTP/1.1 101 Switching Protocols\r\n"
-                "Server: arduino-WebSocketsServer\r\n"
                 "Upgrade: websocket\r\n"
                 "Connection: Upgrade\r\n"
                 "Sec-WebSocket-Version: 13\r\n"
