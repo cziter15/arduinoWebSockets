@@ -33,7 +33,7 @@
 
 class WebSocketsServerCore : protected WebSockets {
   public:
-    WebSocketsServerCore(const String & origin = "", const String & protocol = "arduino");
+    WebSocketsServerCore(const String & origin = "", const String & protocol = "");
     virtual ~WebSocketsServerCore(void);
 
     void begin(void);
@@ -137,16 +137,6 @@ class WebSocketsServerCore : protected WebSockets {
      * @param client WSclient_t *  ptr to the client struct
      */
     virtual void handleNonWebsocketConnection(WSclient_t * client) {
-        DEBUG_WEBSOCKETS("[WS-Server][%d][handleHeader] no Websocket connection close.\n", client->num);
-        client->tcp->write(
-            "HTTP/1.1 400 Bad Request\r\n"
-            "Server: arduino-WebSocket-Server\r\n"
-            "Content-Type: text/plain\r\n"
-            "Content-Length: 32\r\n"
-            "Connection: close\r\n"
-            "Sec-WebSocket-Version: 13\r\n"
-            "\r\n"
-            "This is a Websocket server only!");
         clientDisconnect(client);
     }
 
@@ -156,16 +146,6 @@ class WebSocketsServerCore : protected WebSockets {
      * @param client WSclient_t *  ptr to the client struct
      */
     virtual void handleAuthorizationFailed(WSclient_t * client) {
-        client->tcp->write(
-            "HTTP/1.1 401 Unauthorized\r\n"
-            "Server: arduino-WebSocket-Server\r\n"
-            "Content-Type: text/plain\r\n"
-            "Content-Length: 45\r\n"
-            "Connection: close\r\n"
-            "Sec-WebSocket-Version: 13\r\n"
-            "WWW-Authenticate: Basic realm=\"WebSocket Server\""
-            "\r\n"
-            "This Websocket server requires Authorization!");
         clientDisconnect(client);
     }
 
@@ -218,7 +198,7 @@ class WebSocketsServerCore : protected WebSockets {
 
 class WebSocketsServer : public WebSocketsServerCore {
   public:
-    WebSocketsServer(uint16_t port, const String & origin = "", const String & protocol = "arduino");
+    WebSocketsServer(uint16_t port, const String & origin = "", const String & protocol = "");
     virtual ~WebSocketsServer(void);
 
     void begin(void);
