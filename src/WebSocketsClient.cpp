@@ -528,7 +528,11 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client) {
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RP2040)
     if(client->isSSL && client->ssl) {
         if(client->ssl->connected()) {
+#if(defined(ESP32) && ESP_ARDUINO_VERSION_MAJOR >= 3)
+            client->tcp->clear();
+#else
             client->ssl->flush();
+#endif
             client->ssl->stop();
         }
         event = true;
@@ -541,7 +545,11 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client) {
     if(client->tcp) {
         if(client->tcp->connected()) {
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if(defined(ESP32) && ESP_ARDUINO_VERSION_MAJOR >= 3)
+            client->tcp->clear();
+#else
             client->tcp->flush();
+#endif
 #endif
             client->tcp->stop();
         }
